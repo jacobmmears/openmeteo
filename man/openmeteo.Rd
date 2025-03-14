@@ -26,6 +26,7 @@ historical weather variables provided
 \strong{Other APIs}
 \itemize{
 \item \code{\link[=geocode]{geocode()}} - return the co-ordinates and other data for a location name
+\item \code{\link[=ensemble_models]{ensemble_models()}} - return ensemble model forecasts for a location
 \item \code{\link[=climate_forecast]{climate_forecast()}} - return long-range climate modelling for a location
 \item \code{\link[=river_discharge]{river_discharge()}} - return flow volumes for the nearest river
 \item \code{\link[=marine_forecast]{marine_forecast()}} - return ocean conditions data for a location
