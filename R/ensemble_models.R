@@ -42,8 +42,8 @@
 #'   place name string (with co-ordinates obtained via [geocode()]).
 #' @param start,end Start and end dates in ISO 8601 (e.g. "2020-12-31"). If no
 #'   dates are supplied, data for the next 7 days will be provided by default.
-#' @param hourly,daily At least one required. A marine weather variable accepted
-#'   by the API, or list thereof. See details below.
+#' @param hourly At least one required. A weather variable accepted by the
+#'   API, or list thereof. See details below.
 #' @param response_units Supply to convert response units for wave heights. This
 #'   defaults to: `list(length_unit="metric") for meters. Specify "Imperial" for
 #'   feet.`
@@ -75,13 +75,12 @@ ensemble_models <- function(
     start = NULL,
     end = NULL,
     hourly = NULL,
-    daily = NULL,
     response_units = NULL,
     model = NULL,
     timezone = "auto") {
   # validation
-  if (is.null(hourly) && is.null(daily)) {
-    stop("hourly or daily measure not supplied")
+  if (is.null(hourly)) {
+    stop("hourly measure not supplied")
   }
   if (!is.null(start) && !.is.date(start)) {
     stop("start and end dates must be in ISO-1806 format")
@@ -95,7 +94,7 @@ ensemble_models <- function(
   .query_openmeteo(
     location,
     start, end,
-    hourly, daily,
+    hourly, NULL, # non-set fields passed as null
     response_units,
     model,
     timezone,

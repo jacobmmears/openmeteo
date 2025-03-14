@@ -9,7 +9,6 @@ ensemble_models(
   start = NULL,
   end = NULL,
   hourly = NULL,
-  daily = NULL,
   response_units = NULL,
   model = NULL,
   timezone = "auto"
@@ -23,8 +22,8 @@ place name string (with co-ordinates obtained via \code{\link[=geocode]{geocode(
 \item{start, end}{Start and end dates in ISO 8601 (e.g. "2020-12-31"). If no
 dates are supplied, data for the next 7 days will be provided by default.}
 
-\item{hourly, daily}{At least one required. A marine weather variable accepted
-by the API, or list thereof. See details below.}
+\item{hourly}{At least one required. A weather variable accepted by the
+API, or list thereof. See details below.}
 
 \item{response_units}{Supply to convert response units for wave heights. This
 defaults to: \verb{list(length_unit="metric") for meters. Specify "Imperial" for feet.}}
