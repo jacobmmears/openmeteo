@@ -27,7 +27,7 @@
 #'   details regarding the data available, its types, units, and other caveats
 #'   and considerations.
 #'
-#' @docType package
+#' _PACKAGE
 #' @name openmeteo
 #' @aliases openmeteo-package
 NULL
