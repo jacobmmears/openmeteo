@@ -18,6 +18,7 @@
 #'
 #'   **Other APIs**
 #'   - [geocode()] - return the co-ordinates and other data for a location name
+#'   - [ensemble_models()] - return ensemble model forecasts for a location
 #'   - [climate_forecast()] - return long-range climate modelling for a location
 #'   - [river_discharge()] - return flow volumes for the nearest river
 #'   - [marine_forecast()] - return ocean conditions data for a location
