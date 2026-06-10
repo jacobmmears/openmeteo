@@ -2,6 +2,7 @@
 
 export(air_quality)
 export(climate_forecast)
+export(ensemble_models)
 export(geocode)
 export(marine_forecast)
 export(river_discharge)
