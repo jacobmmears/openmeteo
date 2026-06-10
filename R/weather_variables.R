@@ -22,13 +22,15 @@
 #' weather_variables()
 #' }
 weather_variables <- function() {
-  base_url <- "https://raw.githubusercontent.com/open-meteo/open-meteo/main/"
+  # Open-Meteo moved their openapi specs into an `openapi/` subdir and renamed
+  # them in late 2024; the prior URLs now 404.
+  base_url <- "https://raw.githubusercontent.com/open-meteo/open-meteo/main/openapi/"
 
-  forecast_url <- paste0(base_url, "openapi.yml")
+  forecast_url <- paste0(base_url, "forecast.yml")
   forecast_params <-
     .retrieve_om_schema(forecast_url)$paths$`/v1/forecast`$get$parameters
 
-  history_url <- paste0(base_url, "openapi_historical_weather_api.yml")
+  history_url <- paste0(base_url, "historical-weather.yml")
   history_params <-
     .retrieve_om_schema(history_url)$paths$`/v1/archive`$get$parameters
 

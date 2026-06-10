@@ -3,6 +3,7 @@
 * New `ensemble_models()` function for the Open-Meteo Ensemble Models API (#10, thanks @jacobmmears)
 * `air_quality()` now supports the `current` argument for latest-value readings, and validates that `hourly`/`current` are character vectors (#11)
 * Added `URL` and `BugReports` fields to DESCRIPTION (#12)
+* Fixed `weather_variables()` after Open-Meteo moved their OpenAPI specs to a new path
 
 # openmeteo 0.2.4
 
