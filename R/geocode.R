@@ -58,7 +58,7 @@ geocode <- function(location_name,
     stop("No matches found")
   }
 
-  out <- tibblify::tibblify(httr::content(pl, as = "parsed")$results)
+  out <- .geocoding_results_as_tibble(httr::content(pl, as = "parsed")$results)
 
   if (!silent && !testthat::is_testing()) {
     l <- dplyr::slice_head(out)

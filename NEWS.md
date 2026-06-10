@@ -4,6 +4,7 @@
 * `air_quality()` now supports the `current` argument for latest-value readings, and validates that `hourly`/`current` are character vectors (#11)
 * Added `URL` and `BugReports` fields to DESCRIPTION (#12)
 * Fixed `weather_variables()` after Open-Meteo moved their OpenAPI specs to a new path
+* Dropped the `tibblify` dependency (this was the reason for the previous CRAN archival); `geocode()` now assembles its result tibble using `tibble`/`dplyr` directly
 
 # openmeteo 0.2.4
 

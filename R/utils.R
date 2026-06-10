@@ -194,3 +194,18 @@ utils::globalVariables(c("time", "datetime"))
     tibble::as_tibble() |>
     tidyr::unnest(cols = tidyr::everything())
 }
+
+# Geocoding API returns a heterogeneous list of records (e.g. some have a
+# `postcodes` vector, some only have admin1, etc.). Convert one record at a
+# time, wrapping multi-element fields as list-columns so as_tibble_row accepts
+# them, then bind. Equivalent to what tibblify::tibblify() produced before we
+# removed that dependency.
+.geocoding_results_as_tibble <- function(results) {
+  rows <- lapply(results, function(r) {
+    wrapped <- lapply(r, function(v) {
+      if (length(v) > 1 || is.list(v)) list(v) else v
+    })
+    tibble::as_tibble_row(wrapped, .name_repair = "minimal")
+  })
+  dplyr::bind_rows(rows)
+}
