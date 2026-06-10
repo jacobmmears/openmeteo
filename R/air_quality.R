@@ -33,14 +33,18 @@
 #'   place name string (with co-ordinates obtained via [geocode()]).
 #' @param start,end Start and end dates in ISO 8601 (e.g. "2020-12-31"). If no
 #'   dates are supplied, data for the next 5 days will be provided by default.
-#' @param hourly Required. An air quality variable accepted by the
-#'   API, or list thereof. See details below.
+#' @param hourly At least one of `hourly` or `current` is required. An air
+#'   quality variable accepted by the API, or list thereof. See details below.
+#' @param current An air quality variable (or list thereof) to retrieve at the
+#'   latest available timestamp, e.g. `current = c("pm10", "us_aqi")`. Returns a
+#'   single-row tibble. If both `hourly` and `current` are supplied, a named
+#'   list with both tibbles is returned.
 #' @param timezone specify timezone for time data as a string, i.e.
 #'   "australia/sydney" (defaults to "auto", the timezone local to the specified
 #'   `location`).
 #'
 #' @return Requested air quality data for the given location and time, as a
-#'   tidy tibble.
+#'   tidy tibble (or named list when both `hourly` and `current` are requested).
 #'
 #' @export
 #'
@@ -48,16 +52,26 @@
 #' \donttest{
 #' # obtain Carbon Monoxide levels for Beijing over the next 5 days
 #' air_quality("Beijing", hourly = "carbon_monoxide")
+#'
+#' # obtain the most recent pollen and AQI readings for Berlin
+#' air_quality("Berlin", current = c("grass_pollen", "european_aqi"))
 #' }
 air_quality <- function(
     location,
     start = NULL,
     end = NULL,
     hourly = NULL,
+    current = NULL,
     timezone = "auto") {
   # validation
-  if (is.null(hourly)) {
-    stop("hourly measure not supplied")
+  if (is.null(hourly) && is.null(current)) {
+    stop("at least one of `hourly` or `current` must be supplied")
+  }
+  if (!is.null(hourly) && !is.character(hourly)) {
+    stop("`hourly` must be a character vector of variable names")
+  }
+  if (!is.null(current) && !is.character(current)) {
+    stop("`current` must be a character vector of variable names")
   }
   if (!is.null(start) && !.is.date(start)) {
     stop("start and end dates must be in ISO-1806 format")
@@ -71,11 +85,12 @@ air_quality <- function(
   .query_openmeteo(
     location,
     start, end,
-    hourly, NULL, # non-set fields passed as null
-    NULL,
-    NULL,
+    hourly, NULL, # no daily for air quality
+    NULL, # no unit overrides
+    NULL, # no model selection
     timezone,
-    NULL, # no downscaling option for  air quality
-    base_url
+    NULL, # no downscaling option for air quality
+    base_url,
+    current = current
   )
 }

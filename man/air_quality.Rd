@@ -9,6 +9,7 @@ air_quality(
   start = NULL,
   end = NULL,
   hourly = NULL,
+  current = NULL,
   timezone = "auto"
 )
 }
@@ -20,8 +21,13 @@ place name string (with co-ordinates obtained via \code{\link[=geocode]{geocode(
 \item{start, end}{Start and end dates in ISO 8601 (e.g. "2020-12-31"). If no
 dates are supplied, data for the next 5 days will be provided by default.}
 
-\item{hourly}{Required. An air quality variable accepted by the
-API, or list thereof. See details below.}
+\item{hourly}{At least one of \code{hourly} or \code{current} is required. An air
+quality variable accepted by the API, or list thereof. See details below.}
+
+\item{current}{An air quality variable (or list thereof) to retrieve at the
+latest available timestamp, e.g. \code{current = c("pm10", "us_aqi")}. Returns a
+single-row tibble. If both \code{hourly} and \code{current} are supplied, a named
+list with both tibbles is returned.}
 
 \item{timezone}{specify timezone for time data as a string, i.e.
 "australia/sydney" (defaults to "auto", the timezone local to the specified
@@ -29,7 +35,7 @@ API, or list thereof. See details below.}
 }
 \value{
 Requested air quality data for the given location and time, as a
-tidy tibble.
+tidy tibble (or named list when both \code{hourly} and \code{current} are requested).
 }
 \description{
 \code{air_quality()} calls the Open-Meteo Air Quality API to obtain pollutant,
@@ -61,5 +67,8 @@ Full documentation for the forecast API is available at:
 \donttest{
 # obtain Carbon Monoxide levels for Beijing over the next 5 days
 air_quality("Beijing", hourly = "carbon_monoxide")
+
+# obtain the most recent pollen and AQI readings for Berlin
+air_quality("Berlin", current = c("grass_pollen", "european_aqi"))
 }
 }

@@ -12,7 +12,8 @@ utils::globalVariables(c("time", "datetime"))
     model,
     timezone,
     downscaling,
-    base_url) {
+    base_url,
+    current = NULL) {
   coordinates <- .coords_generic(location)
 
   # base queries
@@ -24,13 +25,16 @@ utils::globalVariables(c("time", "datetime"))
     timezone = timezone
   )
 
-  # add units/hourly/daily/model as supplied
+  # add units/hourly/daily/current/model as supplied
   queries <- c(queries, response_units)
   if (!is.null(hourly)) {
     queries$hourly <- paste(hourly, collapse = ",")
   }
   if (!is.null(daily)) {
     queries$daily <- paste(daily, collapse = ",")
+  }
+  if (!is.null(current)) {
+    queries$current <- paste(current, collapse = ",")
   }
   if (!is.null(model)) {
     if (length(model) != 1) {
@@ -53,6 +57,23 @@ utils::globalVariables(c("time", "datetime"))
   dtformat <- "%Y-%m-%dT%H:%M"
   export_both <- (!is.null(hourly) & !is.null(daily))
 
+  # parse current data (single record). Returned alongside hourly/daily as a
+  # named list element when those are also requested; otherwise returned bare.
+  current_tibble <- NULL
+  if (!is.null(pl_parsed$current)) {
+    current_tibble <-
+      pl_parsed$current |>
+      .nestedlist_as_tibble() |>
+      dplyr::rename_with(~ paste0("current_", .x), .cols = -tidyr::any_of(c("time", "interval"))) |>
+      dplyr::mutate(datetime = as.POSIXct(time, format = dtformat, tz = tz)) |>
+      dplyr::relocate(datetime, .before = time) |>
+      dplyr::select(-time)
+
+    if (is.null(hourly) && is.null(daily)) {
+      return(current_tibble)
+    }
+  }
+
   # parse hourly data
   if (!is.null(pl_parsed$hourly)) {
     hourly_tibble <-
@@ -63,7 +84,7 @@ utils::globalVariables(c("time", "datetime"))
       dplyr::relocate(datetime, .before = time) |>
       dplyr::select(-time)
 
-    if (!export_both) {
+    if (!export_both && is.null(current_tibble)) {
       return(hourly_tibble)
     }
   }
@@ -78,9 +99,17 @@ utils::globalVariables(c("time", "datetime"))
       dplyr::relocate(date, .before = time) |>
       dplyr::select(-time)
 
-    if (!export_both) {
+    if (!export_both && is.null(current_tibble)) {
       return(daily_tibble)
     }
+  }
+
+  # if current was requested alongside hourly/daily, return a named list
+  if (!is.null(current_tibble)) {
+    out <- list(current = current_tibble)
+    if (!is.null(pl_parsed$hourly)) out$hourly <- hourly_tibble
+    if (!is.null(pl_parsed$daily))  out$daily  <- daily_tibble
+    return(out)
   }
 
   # combine both hourly and daily if requested
