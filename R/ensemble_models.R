@@ -44,9 +44,10 @@
 #'   dates are supplied, data for the next 7 days will be provided by default.
 #' @param hourly At least one required. A weather variable accepted by the
 #'   API, or list thereof. See details below.
-#' @param response_units Supply to convert response units for wave heights. This
-#'   defaults to: `list(length_unit="metric") for meters. Specify "Imperial" for
-#'   feet.`
+#' @param response_units Supply to convert response units for temperature, wind
+#'   speed, and precipitation, e.g.
+#'   `list(temperature_unit = "fahrenheit", precipitation_unit = "inch")`. Refer
+#'   to the API documentation for accepted unit names.
 #' @param model Supply to specify an ensemble model for forecasted values (refer
 #'   to the API documentation).
 #' @param timezone specify timezone for time data as a string, i.e.
@@ -68,8 +69,6 @@
 #'   model = "gfs_seamless"
 #' )
 #' }
-
-
 ensemble_models <- function(
     location,
     start = NULL,

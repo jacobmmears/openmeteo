@@ -25,8 +25,10 @@ dates are supplied, data for the next 7 days will be provided by default.}
 \item{hourly}{At least one required. A weather variable accepted by the
 API, or list thereof. See details below.}
 
-\item{response_units}{Supply to convert response units for wave heights. This
-defaults to: \verb{list(length_unit="metric") for meters. Specify "Imperial" for feet.}}
+\item{response_units}{Supply to convert response units for temperature, wind
+speed, and precipitation, e.g.
+\code{list(temperature_unit = "fahrenheit", precipitation_unit = "inch")}. Refer
+to the API documentation for accepted unit names.}
 
 \item{model}{Supply to specify an ensemble model for forecasted values (refer
 to the API documentation).}
