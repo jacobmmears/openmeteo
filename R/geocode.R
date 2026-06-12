@@ -51,6 +51,12 @@ geocode <- function(location_name,
     language = language
   )
 
+  api_key <- Sys.getenv("OPENMETEO_API_KEY", unset = NA_character_)
+
+  if (!is.na(api_key) && nzchar(api_key)) {
+    queries$apikey <- api_key
+  }
+  
   pl <- httr::GET(httr::modify_url(base_url, query = queries))
   .response_OK(pl)
 
