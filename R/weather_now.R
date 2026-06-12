@@ -31,7 +31,7 @@ weather_now <- function(
     response_units = NULL,
     timezone = "auto") {
   coordinates <- .coords_generic(location)
-  base_url <- "https://api.open-meteo.com/v1/forecast"
+  base_url <- .lookup_open_meteo_url(fxn_name = "weather_now")
 
   # base queries
   queries <- list(
